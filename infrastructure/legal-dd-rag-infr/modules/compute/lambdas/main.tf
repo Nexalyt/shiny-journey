@@ -33,3 +33,75 @@ resource "aws_lambda_function" "notify" {
   s3_key        = "notify-lambda.zip"
   tags          = merge(var.tags, { Name = "legal-dd-notify${var.environment}" })
 }
+
+variable "environment" {
+  description = "Deployment environment (dev or prod)"
+  type        = string
+}
+
+variable "tags" {
+  description = "Tags to apply to resources."
+  type        = map(string)
+}
+
+variable "pdf_extractor_image_uri" {
+  description = "ECR image URI for the PDF extraction Lambda."
+  type        = string
+}
+
+variable "sqs_queue_arn" {
+  description = "ARN of the SQS queue to trigger the Lambda."
+  type        = string
+}
+
+resource "aws_lambda_function" "pdf_extractor" {
+  function_name = "pdf-extractor-${var.environment}"
+  package_type  = "Image"
+  image_uri     = var.pdf_extractor_image_uri
+  role          = aws_iam_role.lambda_exec.arn
+  timeout       = 900 # 15 minutes (Lambda max)
+  memory_size   = 1024
+
+  environment {
+    variables = {
+      ENVIRONMENT = var.environment
+    }
+  }
+
+  tags = var.tags
+}
+
+resource "aws_lambda_event_source_mapping" "sqs_trigger" {
+  event_source_arn = var.sqs_queue_arn
+  function_name    = aws_lambda_function.pdf_extractor.arn
+  batch_size       = 1
+  enabled          = true
+}
+
+resource "aws_iam_role" "lambda_exec" {
+  name = "lambda-exec-role-${var.environment}"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = {
+        Service = "lambda.amazonaws.com"
+      }
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_basic" {
+  role       = aws_iam_role.lambda_exec.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_sqs" {
+  role       = aws_iam_role.lambda_exec.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSLambdaSQSQueueExecutionRole"
+}
+
+output "pdf_extractor_lambda_arn" {
+  value = aws_lambda_function.pdf_extractor.arn
+}

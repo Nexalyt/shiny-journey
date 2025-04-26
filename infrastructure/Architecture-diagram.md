@@ -1,6 +1,6 @@
 # Mermaid
 
-``````
+```
 flowchart TD
     %% Nodes
     L(Lawyer)
@@ -59,11 +59,11 @@ flowchart TD
     ProcMD -->|Ingest data| SageMaker
     SageMaker -->|Deploy fine-tuned model| VecLambda
 
-``````
+```
 
 # Ereaser
 
-``````
+```
 title Legal Due-Diligence RAG Platform – System Overview
 
 // External Actors
@@ -135,5 +135,5 @@ IngestQueue > DLQ: On failure
 // Optional retraining
 Processed MD Bucket > SageMaker Pipeline: Ingest data
 SageMaker Pipeline > VectorLambda: Deploy fine-tuned model
-``````
+```
 

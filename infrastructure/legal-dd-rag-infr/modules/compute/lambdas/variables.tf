@@ -13,3 +13,13 @@ variable "lambda_s3_bucket" {
   type        = string
   default     = null
 }
+
+variable "pdf_extractor_image_uri" {
+  description = "ECR image URI for the PDF extraction Lambda."
+  type        = string
+}
+
+variable "sqs_queue_arn" {
+  description = "ARN of the SQS queue to trigger the Lambda."
+  type        = string
+}
