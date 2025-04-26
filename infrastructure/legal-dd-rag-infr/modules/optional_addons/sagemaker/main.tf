@@ -23,3 +23,14 @@ variable "pipeline_name" {
   type        = string
   default     = "legal-dd-retrain-pipeline"
 }
+
+resource "aws_sagemaker_pipeline" "retrain" {
+  name     = var.pipeline_name
+  role_arn = var.pipeline_role_arn
+  pipeline_definition_s3_location = var.pipeline_definition_s3_uri
+  tags     = var.tags
+}
+
+output "sagemaker_pipeline_name" {
+  value = aws_sagemaker_pipeline.retrain.name
+}
