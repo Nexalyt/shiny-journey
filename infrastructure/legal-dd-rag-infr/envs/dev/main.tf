@@ -42,6 +42,13 @@ module "observability" {
   tags        = local.tags
 }
 
+# Load shared locals
+locals {
+  project     = "legal-dd"
+  owner       = "guimo@gmail.com"
+  cost_center = "CC-00001-LDD"
+}
+
 module "security" {
   source = "../../modules/security"
   environment = var.environment
