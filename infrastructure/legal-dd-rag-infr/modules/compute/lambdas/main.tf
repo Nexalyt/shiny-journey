@@ -41,6 +41,7 @@ resource "aws_lambda_function" "pdf_extractor" {
   role          = aws_iam_role.lambda_exec.arn
   timeout       = 900 # 15 minutes (Lambda max)
   memory_size   = 1024
+  architectures = ["arm64"]
 
   environment {
     variables = {
