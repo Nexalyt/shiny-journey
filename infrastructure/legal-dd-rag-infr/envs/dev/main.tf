@@ -45,8 +45,16 @@ module "observability" {
 # Load shared locals
 locals {
   project     = "legal-dd"
-  owner       = "guimo@gmail.com"
+  owner       = "GuimoAAGG@gmail.com"
   cost_center = "CC-00001-LDD"
+  environment = var.environment
+  tags = {
+    Environment = local.environment
+    Project     = local.project
+    Owner       = local.owner
+    CostCenter  = local.cost_center
+  }
+  name_suffix = "-${local.environment}"
 }
 
 module "security" {

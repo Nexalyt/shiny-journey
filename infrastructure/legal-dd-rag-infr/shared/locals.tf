@@ -1,6 +1,6 @@
 locals {
   project     = "legal-dd"
-  owner       = "guimo@gmail.com" # Update as needed
+  owner       = "GuimoAAGG@gmail.com" # Update as needed
   cost_center = "CC-00001-LDD"           # Update as needed
   environment = var.environment
 
