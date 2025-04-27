@@ -16,12 +16,6 @@ module "storage_queue" {
   tags        = local.tags
 }
 
-module "compute_eks" {
-  source = "../../modules/compute/eks"
-  environment = var.environment
-  tags        = local.tags
-}
-
 module "compute_lambdas" {
   source = "../../modules/compute/lambdas"
   environment = var.environment
