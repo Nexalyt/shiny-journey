@@ -82,6 +82,28 @@ resource "aws_cloudfront_distribution" "spa" {
   tags = var.tags
 }
 
+resource "aws_s3_bucket_lifecycle_configuration" "spa_lifecycle" {
+  bucket = aws_s3_bucket.spa.id
+
+  rule {
+    id     = "transition-to-ia-and-expire"
+    status = "Enabled"
+    filter {
+      prefix = ""
+    }
+    transition {
+      days          = 30
+      storage_class = "STANDARD_IA"
+    }
+    expiration {
+      days = 180
+    }
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
+    }
+  }
+}
+
 output "spa_bucket_name" {
   value = aws_s3_bucket.spa.bucket
 }

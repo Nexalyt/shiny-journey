@@ -1,14 +1,15 @@
 locals {
   project     = "legal-dd"
-  owner       = "guimo@gmail.com" # Update as needed
+  owner       = "GuimoAAGG@gmail.com" # Update as needed
   cost_center = "CC-00001-LDD"           # Update as needed
   environment = var.environment
 
   tags = {
-    Environment = local.environment
+    Environment = title(local.environment)
     Project     = local.project
     Owner       = local.owner
     CostCenter  = local.cost_center
+    # Service can be overridden per resource/module
   }
 
   # Resource name suffixing

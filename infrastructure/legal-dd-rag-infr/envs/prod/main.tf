@@ -16,7 +16,7 @@ provider "aws" {
 # Load shared locals
 locals {
   project     = "legal-dd"
-  owner       = "guimo@gmail.com"
+  owner       = "GuimoAAGG@gmail.com"
   cost_center = "CC-00001-LDD"
   environment = var.environment
   tags = {
