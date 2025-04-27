@@ -20,6 +20,8 @@ module "compute_lambdas" {
   source = "../../modules/compute/lambdas"
   environment = var.environment
   tags        = local.tags
+  pdf_extractor_image_uri = "<REPLACE_WITH_ECR_IMAGE_URI>"
+  sqs_queue_arn = module.storage_queue.ingest_fifo_queue_arn
 }
 
 module "compute_stepfunctions" {
