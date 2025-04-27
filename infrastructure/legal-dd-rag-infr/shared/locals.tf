@@ -5,10 +5,11 @@ locals {
   environment = var.environment
 
   tags = {
-    Environment = local.environment
+    Environment = title(local.environment)
     Project     = local.project
     Owner       = local.owner
     CostCenter  = local.cost_center
+    # Service can be overridden per resource/module
   }
 
   # Resource name suffixing

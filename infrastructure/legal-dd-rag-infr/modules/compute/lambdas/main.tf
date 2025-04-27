@@ -49,7 +49,10 @@ resource "aws_lambda_function" "pdf_extractor" {
     }
   }
 
-  tags = var.tags
+  tags = merge(var.tags, {
+    Service = "pdf-extractor"
+    Environment = title(var.environment)
+  })
 }
 
 resource "aws_lambda_event_source_mapping" "sqs_trigger" {
