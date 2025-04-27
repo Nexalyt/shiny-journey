@@ -11,7 +11,6 @@ resource "aws_cognito_user_pool_client" "this" {
   allowed_oauth_scopes = var.allowed_oauth_scopes
   callback_urls = var.callback_urls
   supported_identity_providers = ["COGNITO", "Google", "Okta"]
-  tags = var.tags
 }
 
 resource "aws_cognito_user_pool_domain" "this" {

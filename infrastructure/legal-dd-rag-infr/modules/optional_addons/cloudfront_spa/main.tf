@@ -16,12 +16,22 @@ variable "spa_bucket_name" {
 
 resource "aws_s3_bucket" "spa" {
   bucket = var.spa_bucket_name
-  acl    = "public-read"
-  website {
-    index_document = "index.html"
-    error_document = "index.html"
-  }
   tags = var.tags
+}
+
+resource "aws_s3_bucket_acl" "spa" {
+  bucket = aws_s3_bucket.spa.id
+  acl    = "public-read"
+}
+
+resource "aws_s3_bucket_website_configuration" "spa" {
+  bucket = aws_s3_bucket.spa.id
+  index_document {
+    suffix = "index.html"
+  }
+  error_document {
+    key = "index.html"
+  }
 }
 
 resource "aws_s3_bucket_policy" "spa_policy" {
@@ -41,7 +51,7 @@ resource "aws_cloudfront_distribution" "spa" {
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = "index.html"
-  origins {
+  origin {
     domain_name = aws_s3_bucket.spa.bucket_regional_domain_name
     origin_id   = "spaS3Origin"
     s3_origin_config {
@@ -58,6 +68,11 @@ resource "aws_cloudfront_distribution" "spa" {
       cookies {
         forward = "none"
       }
+    }
+  }
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
     }
   }
   price_class = "PriceClass_100"

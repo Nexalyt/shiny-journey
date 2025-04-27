@@ -35,7 +35,7 @@ resource "aws_nat_gateway" "this" {
 
 resource "aws_eip" "nat" {
   count = 2
-  vpc = true
+  domain = "vpc"
   tags = merge(var.tags, { Name = "legal-dd-nat-eip-${count.index}${var.environment}" })
 }
 

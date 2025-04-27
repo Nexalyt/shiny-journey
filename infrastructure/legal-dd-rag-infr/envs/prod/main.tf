@@ -1,3 +1,33 @@
+# Include shared provider, variables, locals, and versions
+terraform {
+  required_version = ">= 1.5.0"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = var.aws_region
+}
+
+# Load shared locals
+locals {
+  project     = "legal-dd"
+  owner       = "guimo@gmail.com"
+  cost_center = "CC-00001-LDD"
+  environment = var.environment
+  tags = {
+    Environment = local.environment
+    Project     = local.project
+    Owner       = local.owner
+    CostCenter  = local.cost_center
+  }
+  name_suffix = "-${local.environment}"
+}
+
 module "identity" {
   source = "../../modules/identity"
   environment = var.environment
@@ -20,6 +50,8 @@ module "compute_lambdas" {
   source = "../../modules/compute/lambdas"
   environment = var.environment
   tags        = local.tags
+  pdf_extractor_image_uri = "<REPLACE_WITH_ECR_IMAGE_URI>"
+  sqs_queue_arn = module.storage_queue.ingest_fifo_queue_arn
 }
 
 module "compute_stepfunctions" {
@@ -50,6 +82,10 @@ module "optional_addons_sagemaker" {
   source = "../../modules/optional_addons/sagemaker"
   environment = var.environment
   tags        = local.tags
+  pipeline_role_arn = module.security.sagemaker_pipeline_role_arn
+  pipeline_display_name = "Legal-DD-Retrain-Pipeline"
+  pipeline_name = "legal-dd-retrain-pipeline"
+  pipeline_definition_json = "{\"Version\":\"2020-12-01\",\"Metadata\":{},\"PipelineDefinition\":{}}"
 }
 
 module "optional_addons_cloudfront_spa" {

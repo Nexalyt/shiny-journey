@@ -34,6 +34,19 @@ resource "aws_iam_role" "stepfunctions" {
   tags = var.tags
 }
 
+resource "aws_iam_role" "sagemaker_pipeline" {
+  name = "legal-dd-sagemaker-pipeline-role-${var.environment}"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Principal = { Service = "sagemaker.amazonaws.com" }
+      Action = "sts:AssumeRole"
+    }]
+  })
+  tags = var.tags
+}
+
 data "aws_iam_policy_document" "eks_assume_role" {
   statement {
     actions = ["sts:AssumeRole"]

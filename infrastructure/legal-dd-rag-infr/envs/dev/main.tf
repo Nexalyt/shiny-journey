@@ -50,6 +50,10 @@ module "optional_addons_sagemaker" {
   source = "../../modules/optional_addons/sagemaker"
   environment = var.environment
   tags        = local.tags
+  pipeline_role_arn = module.security.sagemaker_pipeline_role_arn
+  pipeline_display_name = "Legal-DD-Retrain-Pipeline"
+  pipeline_name = "legal-dd-retrain-pipeline"
+  pipeline_definition_json = "{\"Version\":\"2020-12-01\",\"Metadata\":{},\"PipelineDefinition\":{}}"
 }
 
 module "optional_addons_cloudfront_spa" {

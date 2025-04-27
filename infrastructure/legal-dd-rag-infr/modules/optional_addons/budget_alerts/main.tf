@@ -29,7 +29,6 @@ resource "aws_budgets_budget" "monthly" {
   limit_amount      = var.budget_limit
   limit_unit        = "USD"
   time_unit         = "MONTHLY"
-  cost_filters      = {}
   cost_types {
     include_tax = true
     include_subscription = true
